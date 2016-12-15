@@ -20,9 +20,6 @@ class GameWindow < Gosu::Window
   def update
       second = Time.now.sec
       @time.push(second)
-      if @time_arrays.include?(@time.uniq) == false
-        p @time_arrays.push(@time.uniq)
-      end
       @stars.each do |star|
       if star.x > @player_2.x_hit_left && star.x < @player_2.x_hit_right && star.y > @player_2.y_hit_up && star.y < @player_2.y_hit_down
         p "hit! ===================================  1 :  0  ======================================================"
@@ -32,7 +29,7 @@ class GameWindow < Gosu::Window
     end
 
     if Gosu::button_down? Gosu::KbSpace then
-      if @time_arrays.uniq[-1].length >= @time_arrays.uniq[-2].length
+      if @time.last >= @time[-2] + 1
       @stars.push(Star.new(@star_anim, @player_1.x))
       end
     end
