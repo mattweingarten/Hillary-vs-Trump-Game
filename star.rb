@@ -18,7 +18,7 @@ class Star
     @vel_x = 0
   end
   def accelerate
-      @vel_y += Gosu::offset_x(10,20)
+      @vel_y += Gosu::offset_x(10,40)
   end
   def move
     @x += @vel_x

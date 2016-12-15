@@ -14,13 +14,16 @@ class GameWindow < Gosu::Window
     @star_anim = Gosu::Image::load_tiles("Star.png", 25, 25)
     @stars = Array.new
     @time = Array.new
+    @time_arrays = Array.new
   end
 
   def update
-      @time.push(Time.now.sec)
+      second = Time.now.sec
+      @time.push(second)
+      if @time_arrays.include?(@time.uniq) == false
+        p @time_arrays.push(@time.uniq)
+      end
       @stars.each do |star|
-
-
       if star.x > @player_2.x_hit_left && star.x < @player_2.x_hit_right && star.y > @player_2.y_hit_up && star.y < @player_2.y_hit_down
         p "hit! ===================================  1 :  0  ======================================================"
         @player_2.image = Gosu::Image.new("explosion.png")
@@ -29,7 +32,7 @@ class GameWindow < Gosu::Window
     end
 
     if Gosu::button_down? Gosu::KbSpace then
-      if @time.last >= @time[-2] + 1
+      if @time_arrays.uniq[-1].length >= @time_arrays.uniq[-2].length
       @stars.push(Star.new(@star_anim, @player_1.x))
       end
     end
