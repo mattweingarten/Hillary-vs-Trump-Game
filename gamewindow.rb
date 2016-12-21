@@ -16,6 +16,8 @@ class GameWindow < Gosu::Window
     @projectile = nil
     @star_anim = Gosu::Image::load_tiles("Star.png", 25, 25)
     @stars = Array.new
+    @stars_1 = Array.new
+    @stars_2 = Array.new
     @time = Array.new
     @time_arrays = Array.new
     @hits = 0
@@ -28,25 +30,47 @@ class GameWindow < Gosu::Window
 
       second = Time.now.sec
       @time.push(second)
-      @stars.each do |star|
+      @stars_1.each do |star|
       if star.x > @player_2.x_hit_left && star.x < @player_2.x_hit_right && star.y > @player_2.y_hit_up && star.y < @player_2.y_hit_down
         @hits += 1
-        p "hit! ===================================  #{@hits} :  0  ======================================================"
+        p "TRUMP WINS!"
         @player_2.image = Gosu::Image.new("explosion.png")
-
+        sleep(1)
+        exit!
+      end
+    end
+      @stars_2.each do |star|
+      if star.x > @player_1.x_hit_left && star.x < @player_1.x_hit_right && star.y > @player_1.y_hit_up && star.y < @player_1.y_hit_down
+        @hits += 1
+        p "HILLARY WINS!"
+        @player_1.image = Gosu::Image.new("explosion.png")
+        sleep(1)
+        exit!
       end
     end
 
     if Gosu::button_down? Gosu::KbSpace then
       if @time.last >= @time[-10] + 1
-      @stars.push(Star.new(@star_anim, @player_1.x))
+        star_intance_1 = Star.new(@star_anim, @player_1.x,@player_1.y)
+      @stars.push(star_intance_1)
+      @stars_1.push(star_intance_1)
+      end
+    end
+    # while Gosu::button_down? Gosu::KbV
+    #   wall_x = rand(100-200)
+    # end
+
+    if Gosu::button_down? Gosu::KbLeftShift then
+      if @time.last >= @time[-10] + 1
+        star_instance_2 = Star.new(@star_anim, @player_2.x,@player_2.y)
+      @stars.push(star_instance_2)
+      @stars_2.push(star_instance_2)
       end
     end
 
 
-
     if Gosu::button_down? Gosu::KbLeft or Gosu::button_down? Gosu::GpButton0 then
-      unless @player_1.x > 20 && @player_1.x < 60
+      unless  @player_1.x < 20
       @player_1.accelerate(-100,3)
       end
     end
@@ -56,12 +80,12 @@ class GameWindow < Gosu::Window
       end
     end
     if  Gosu::button_down? Gosu::KbA then
-      unless @player_2.x < 20
+      unless @player_2.x < 20 + wall_x
       @player_2.accelerate(-100,5)
       end
     end
     if Gosu::button_down? Gosu::KbD then
-      unless @player_2.x > 540
+      unless @player_2.x > 540 - wall_x
       @player_2.accelerate(100,5)
       end
     end
@@ -75,13 +99,16 @@ class GameWindow < Gosu::Window
 
 
     end
-    @stars.each do |star|
-      star.accelerate
+    @stars_1.each do |star|
+      star.accelerate(true)
+    end
+    @stars_2.each do |star|
+      star.accelerate(false)
     end
     @stars.each do |star|
       star.move
     end
-    @stars.reject! {|star| star.y > 450 }
+    @stars.reject! {|star| star.y > 450 || star.y < 50}
     @player_1.move
     @player_2.move
   end
