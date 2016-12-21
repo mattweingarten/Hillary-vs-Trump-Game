@@ -6,19 +6,23 @@ class Star
 
   attr_reader :x, :y, :animation
 
-  def initialize(animation,x)
+  def initialize(animation,x,y)
     @animation = animation
     @color = Gosu::Color.new(0xff_000000)
     @color.red = rand(256 - 40) + 40
     @color.green = rand(256 - 40) + 40
     @color.blue = rand(256 - 40) + 40
     @x = x
-    @y = 50
+    @y = y
     @vel_y = 0
     @vel_x = 0
   end
-  def accelerate
+  def accelerate(up)
+    if up == true
       @vel_y += Gosu::offset_x(10,40)
+    else
+      @vel_y += Gosu::offset_x(-10,40)
+    end
   end
   def move
     @x += @vel_x
